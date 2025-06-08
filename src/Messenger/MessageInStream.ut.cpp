@@ -49,6 +49,7 @@ protected:
                              std::bind(&ReceivePromiseHandlerMock::onReject, &receivePromiseHandlerMock_, std::placeholders::_1));
     }
 
+<<<<<<< Updated upstream
     boost::asio::io_service ioService_;
     transport::ut::TransportMock transportMock_;
     transport::ITransport::Pointer transport_;
@@ -56,6 +57,15 @@ protected:
     ICryptor::Pointer cryptor_;
     ReceivePromiseHandlerMock receivePromiseHandlerMock_;
     ReceivePromise::Pointer receivePromise_;
+=======
+  boost::asio::io_context ioService_;
+  transport::ut::TransportMock transportMock_;
+  transport::ITransport::Pointer transport_;
+  CryptorMock cryptorMock_;
+  ICryptor::Pointer cryptor_;
+  ReceivePromiseHandlerMock receivePromiseHandlerMock_;
+  ReceivePromise::Pointer receivePromise_;
+>>>>>>> Stashed changes
 };
 
 

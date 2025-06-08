@@ -6,7 +6,7 @@
 *  it under the terms of the GNU General Public License as published by
 *  the Free Software Foundation; either version 3 of the License, or
 *  (at your option) any later version.
-
+*
 *  aasdk is distributed in the hope that it will be useful,
 *  but WITHOUT ANY WARRANTY; without even the implied warranty of
 *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -27,6 +27,7 @@ namespace aasdk
 namespace messenger
 {
 
+<<<<<<< Updated upstream
 MessageOutStream::MessageOutStream(boost::asio::io_service& ioService, transport::ITransport::Pointer transport, ICryptor::Pointer cryptor)
     : strand_(ioService)
     , transport_(std::move(transport))
@@ -116,6 +117,54 @@ void MessageOutStream::streamSplittedMessage()
         promise_->reject(e);
         promise_.reset();
     }
+=======
+MessageOutStream::MessageOutStream(boost::asio::io_context& ioService,
+                                   transport::ITransport::Pointer transport,
+                                   ICryptor::Pointer cryptor)
+    : strand_(ioService),
+      transport_(std::move(transport)),
+      cryptor_(std::move(cryptor)),
+      offset_(0),
+      remainingSize_(0) {}
+
+void MessageOutStream::stream(Message::Pointer message,
+                              SendPromise::Pointer promise) {
+  strand_.dispatch(
+      [this, self = this->shared_from_this(),
+       message = std::move(message),
+       promise = std::move(promise)]() mutable {
+        if (promise_ != nullptr) {
+          promise->reject(error::Error(error::ErrorCode::OPERATION_IN_PROGRESS));
+          return;
+        }
+
+        message_ = std::move(message);
+        promise_ = std::move(promise);
+
+        if (message_->getPayload().size() >= cMaxFramePayloadSize) {
+          offset_ = 0;
+          remainingSize_ = message_->getPayload().size();
+          this->streamSplittedMessage();
+        } else {
+          try {
+            auto data(this->compoundFrame(
+                FrameType::BULK, common::DataConstBuffer(message_->getPayload())));
+
+            auto transportPromise =
+                transport::ITransport::SendPromise::defer(strand_);
+            io::PromiseLink<>::forward(*transportPromise, std::move(promise_));
+            transport_->send(std::move(data), std::move(transportPromise));
+          } catch (const error::Error& e) {
+            promise_->reject(e);
+            promise_.reset();
+          }
+
+          this->reset();
+        }
+      },
+      std::allocator<void>()  // allocator required by Boost.Asio
+  );
+>>>>>>> Stashed changes
 }
 
 common::Data MessageOutStream::compoundFrame(FrameType frameType, const common::DataConstBuffer& payloadBuffer)

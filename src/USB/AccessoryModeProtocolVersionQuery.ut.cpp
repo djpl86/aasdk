@@ -108,6 +108,25 @@ BOOST_FIXTURE_TEST_CASE(AccessoryModeProtocolVersionQuery_InvalidProtocolVersion
     EXPECT_CALL(promiseHandlerMock_, onReject(error::Error(error::ErrorCode::USB_AOAP_PROTOCOL_VERSION)));
     EXPECT_CALL(promiseHandlerMock_, onResolve(_)).Times(0);
     ioService_.run();
+<<<<<<< Updated upstream
+=======
+  }
+
+  boost::asio::io_context ioService_;
+  USBWrapperMock usbWrapperMock_;
+  std::shared_ptr<USBEndpointMock> usbEndpointMock_;
+  IUSBEndpoint::Pointer usbEndpoint_;
+  AccessoryModeQueryPromiseHandlerMock promiseHandlerMock_;
+  IAccessoryModeQuery::Promise::Pointer promise_;
+
+  static constexpr uint32_t USB_TYPE_VENDOR = 0x40;
+  static constexpr uint32_t ACC_REQ_GET_PROTOCOL = 51;
+};
+
+BOOST_FIXTURE_TEST_CASE(AccessoryModeProtocolVersionQuery_ProtcolVersion1,
+                        AccessoryModeProtocolVersionQueryUnitTest) {
+  this->scenario_ValidProtocolVersion(1);
+>>>>>>> Stashed changes
 }
 
 BOOST_FIXTURE_TEST_CASE(AccessoryModeProtocolVersionQuery_TransferError, AccessoryModeProtocolVersionQueryUnitTest)

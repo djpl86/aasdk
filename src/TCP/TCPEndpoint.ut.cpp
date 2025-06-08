@@ -44,11 +44,19 @@ protected:
                        std::bind(&TCPEndpointPromiseHandlerMock::onReject, &promiseHandlerMock_, std::placeholders::_1));
     }
 
+<<<<<<< Updated upstream
     TCPWrapperMock tcpWrapperMock_;
     TCPEndpointPromiseHandlerMock promiseHandlerMock_;
     boost::asio::io_service ioService_;
     ITCPEndpoint::SocketPointer socket_;
     ITCPEndpoint::Promise::Pointer promise_;
+=======
+  TCPWrapperMock tcpWrapperMock_;
+  TCPEndpointPromiseHandlerMock promiseHandlerMock_;
+  boost::asio::io_context ioService_;
+  ITCPEndpoint::SocketPointer socket_;
+  ITCPEndpoint::Promise::Pointer promise_;
+>>>>>>> Stashed changes
 };
 
 BOOST_FIXTURE_TEST_CASE(TCPEndpoint_Receive, TCPEndpointUnitTest)

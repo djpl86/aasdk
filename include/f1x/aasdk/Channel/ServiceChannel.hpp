@@ -29,12 +29,23 @@ namespace aasdk
 namespace channel
 {
 
+<<<<<<< Updated upstream:include/f1x/aasdk/Channel/ServiceChannel.hpp
 class ServiceChannel
 {
 protected:
     ServiceChannel(boost::asio::io_service::strand& strand,
                    messenger::IMessenger::Pointer messenger,
                    messenger::ChannelId channelId);
+=======
+class AccessoryModeStartQuery
+    : public AccessoryModeQuery,
+      public std::enable_shared_from_this<AccessoryModeStartQuery> {
+ public:
+  AccessoryModeStartQuery(boost::asio::io_context& ioService,
+                          IUSBWrapper& usbWrapper,
+                          IUSBEndpoint::Pointer usbEndpoint);
+  void start(Promise::Pointer promise) override;
+>>>>>>> Stashed changes:include/aasdk/USB/AccessoryModeStartQuery.hpp
 
     virtual ~ServiceChannel() = default;
     void send(messenger::Message::Pointer message, SendPromise::Pointer promise);

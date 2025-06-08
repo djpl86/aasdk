@@ -32,6 +32,7 @@ namespace aasdk
 namespace usb
 {
 
+<<<<<<< Updated upstream:include/f1x/aasdk/USB/AccessoryModeQuery.hpp
 class AccessoryModeQuery: public IAccessoryModeQuery, boost::noncopyable
 {
 public:
@@ -43,6 +44,19 @@ protected:
     IUSBEndpoint::Pointer usbEndpoint_;
     common::Data data_;
     Promise::Pointer promise_;
+=======
+class AccessoryModeQuery : public IAccessoryModeQuery, boost::noncopyable {
+ public:
+  AccessoryModeQuery(boost::asio::io_context& ioService,
+                     IUSBEndpoint::Pointer usbEndpoint);
+  void cancel() override;
+
+ protected:
+  boost::asio::io_context::strand strand_;
+  IUSBEndpoint::Pointer usbEndpoint_;
+  common::Data data_;
+  Promise::Pointer promise_;
+>>>>>>> Stashed changes:include/aasdk/USB/AccessoryModeQuery.hpp
 
     static constexpr uint32_t cTransferTimeoutMs = 1000;
     static constexpr uint32_t USB_TYPE_VENDOR = 0x40;

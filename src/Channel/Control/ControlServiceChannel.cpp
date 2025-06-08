@@ -33,9 +33,16 @@ namespace channel
 namespace control
 {
 
+<<<<<<< Updated upstream
 ControlServiceChannel::ControlServiceChannel(boost::asio::io_service::strand& strand, messenger::IMessenger::Pointer messenger)
     : ServiceChannel(strand, messenger, messenger::ChannelId::CONTROL)
 {
+=======
+ControlServiceChannel::ControlServiceChannel(
+    boost::asio::io_context::strand& strand,
+    messenger::IMessenger::Pointer messenger)
+    : ServiceChannel(strand, messenger, messenger::ChannelId::CONTROL) {}
+>>>>>>> Stashed changes
 
 }
 

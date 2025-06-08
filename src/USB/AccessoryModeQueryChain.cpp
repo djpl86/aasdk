@@ -6,7 +6,7 @@
 *  it under the terms of the GNU General Public License as published by
 *  the Free Software Foundation; either version 3 of the License, or
 *  (at your option) any later version.
-
+*
 *  aasdk is distributed in the hope that it will be useful,
 *  but WITHOUT ANY WARRANTY; without even the implied warranty of
 *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -27,6 +27,7 @@ namespace aasdk
 namespace usb
 {
 
+<<<<<<< Updated upstream
 AccessoryModeQueryChain::AccessoryModeQueryChain(IUSBWrapper& usbWrapper,
                                                  boost::asio::io_service& ioService,
                                                  IAccessoryModeQueryFactory& queryFactory)
@@ -111,6 +112,65 @@ void AccessoryModeQueryChain::manufacturerQueryHandler(IUSBEndpoint::Pointer usb
     this->startQuery(AccessoryModeQueryType::SEND_MODEL,
                      std::move(usbEndpoint),
                      std::move(queryPromise));
+=======
+AccessoryModeQueryChain::AccessoryModeQueryChain(
+    IUSBWrapper& usbWrapper, boost::asio::io_context& ioService,
+    IAccessoryModeQueryFactory& queryFactory)
+    : usbWrapper_(usbWrapper),
+      strand_(ioService),
+      queryFactory_(queryFactory) {}
+
+void AccessoryModeQueryChain::start(DeviceHandle handle,
+                                    Promise::Pointer promise) {
+  strand_.dispatch(
+      [this, self = this->shared_from_this(),
+       handle = std::move(handle),
+       promise = std::move(promise)]() mutable {
+        if (promise_ != nullptr) {
+          promise->reject(error::Error(error::ErrorCode::OPERATION_IN_PROGRESS));
+        } else {
+          promise_ = std::move(promise);
+
+          auto queryPromise = IAccessoryModeQuery::Promise::defer(strand_);
+          queryPromise->then(
+              [this, self = this->shared_from_this()](IUSBEndpoint::Pointer usbEndpoint) mutable {
+                this->protocolVersionQueryHandler(std::move(usbEndpoint));
+              },
+              [this, self = this->shared_from_this()](const error::Error& e) mutable {
+                promise_->reject(e);
+                promise_.reset();
+              });
+
+#if BOOST_VERSION < 106600
+          this->startQuery(
+              AccessoryModeQueryType::PROTOCOL_VERSION,
+              std::make_shared<USBEndpoint>(usbWrapper_, strand_.get_io_service(),
+                                            std::move(handle)),
+              std::move(queryPromise));
+#else
+          this->startQuery(
+              AccessoryModeQueryType::PROTOCOL_VERSION,
+              std::make_shared<USBEndpoint>(usbWrapper_, strand_.context(),
+                                            std::move(handle)),
+              std::move(queryPromise));
+#endif
+        }
+      },
+      std::allocator<void>()  // allocator required by Boost.Asio
+  );
+}
+
+void AccessoryModeQueryChain::cancel() {
+  strand_.dispatch(
+      [this, self = this->shared_from_this()]() {
+        if (activeQuery_ != nullptr) {
+          activeQuery_->cancel();
+          activeQuery_.reset();
+        }
+      },
+      std::allocator<void>()  // allocator required by Boost.Asio
+  );
+>>>>>>> Stashed changes
 }
 
 void AccessoryModeQueryChain::modelQueryHandler(IUSBEndpoint::Pointer usbEndpoint)
@@ -129,6 +189,7 @@ void AccessoryModeQueryChain::modelQueryHandler(IUSBEndpoint::Pointer usbEndpoin
                      std::move(queryPromise));
 }
 
+<<<<<<< Updated upstream
 void AccessoryModeQueryChain::descriptionQueryHandler(IUSBEndpoint::Pointer usbEndpoint)
 {
     auto queryPromise = IAccessoryModeQuery::Promise::defer(strand_);
@@ -139,12 +200,26 @@ void AccessoryModeQueryChain::descriptionQueryHandler(IUSBEndpoint::Pointer usbE
             promise_->reject(e);
             promise_.reset();
         });
+=======
+void AccessoryModeQueryChain::protocolVersionQueryHandler(
+    IUSBEndpoint::Pointer usbEndpoint) {
+  auto queryPromise = IAccessoryModeQuery::Promise::defer(strand_);
+  queryPromise->then(
+      [this, self = this->shared_from_this()](IUSBEndpoint::Pointer usbEndpoint) mutable {
+        this->manufacturerQueryHandler(std::move(usbEndpoint));
+      },
+      [this, self = this->shared_from_this()](const error::Error& e) mutable {
+        promise_->reject(e);
+        promise_.reset();
+      });
+>>>>>>> Stashed changes
 
     this->startQuery(AccessoryModeQueryType::SEND_VERSION,
                      std::move(usbEndpoint),
                      std::move(queryPromise));
 }
 
+<<<<<<< Updated upstream
 void AccessoryModeQueryChain::versionQueryHandler(IUSBEndpoint::Pointer usbEndpoint)
 {
     auto queryPromise = IAccessoryModeQuery::Promise::defer(strand_);
@@ -171,12 +246,42 @@ void AccessoryModeQueryChain::uriQueryHandler(IUSBEndpoint::Pointer usbEndpoint)
             promise_->reject(e);
             promise_.reset();
         });
+=======
+void AccessoryModeQueryChain::manufacturerQueryHandler(
+    IUSBEndpoint::Pointer usbEndpoint) {
+  auto queryPromise = IAccessoryModeQuery::Promise::defer(strand_);
+  queryPromise->then(
+      [this, self = this->shared_from_this()](IUSBEndpoint::Pointer usbEndpoint) mutable {
+        this->modelQueryHandler(std::move(usbEndpoint));
+      },
+      [this, self = this->shared_from_this()](const error::Error& e) mutable {
+        promise_->reject(e);
+        promise_.reset();
+      });
+
+  this->startQuery(AccessoryModeQueryType::SEND_MODEL,
+                   std::move(usbEndpoint), std::move(queryPromise));
+}
+
+void AccessoryModeQueryChain::modelQueryHandler(
+    IUSBEndpoint::Pointer usbEndpoint) {
+  auto queryPromise = IAccessoryModeQuery::Promise::defer(strand_);
+  queryPromise->then(
+      [this, self = this->shared_from_this()](IUSBEndpoint::Pointer usbEndpoint) mutable {
+        this->descriptionQueryHandler(std::move(usbEndpoint));
+      },
+      [this, self = this->shared_from_this()](const error::Error& e) mutable {
+        promise_->reject(e);
+        promise_.reset();
+      });
+>>>>>>> Stashed changes
 
     this->startQuery(AccessoryModeQueryType::SEND_SERIAL,
                      std::move(usbEndpoint),
                      std::move(queryPromise));
 }
 
+<<<<<<< Updated upstream
 void AccessoryModeQueryChain::serialQueryHandler(IUSBEndpoint::Pointer usbEndpoint)
 {
     auto queryPromise = IAccessoryModeQuery::Promise::defer(strand_);
@@ -201,5 +306,69 @@ void AccessoryModeQueryChain::startQueryHandler(IUSBEndpoint::Pointer usbEndpoin
 }
 
 }
+=======
+void AccessoryModeQueryChain::descriptionQueryHandler(
+    IUSBEndpoint::Pointer usbEndpoint) {
+  auto queryPromise = IAccessoryModeQuery::Promise::defer(strand_);
+  queryPromise->then(
+      [this, self = this->shared_from_this()](IUSBEndpoint::Pointer usbEndpoint) mutable {
+        this->versionQueryHandler(std::move(usbEndpoint));
+      },
+      [this, self = this->shared_from_this()](const error::Error& e) mutable {
+        promise_->reject(e);
+        promise_.reset();
+      });
+
+  this->startQuery(AccessoryModeQueryType::SEND_VERSION,
+                   std::move(usbEndpoint), std::move(queryPromise));
+}
+
+void AccessoryModeQueryChain::versionQueryHandler(
+    IUSBEndpoint::Pointer usbEndpoint) {
+  auto queryPromise = IAccessoryModeQuery::Promise::defer(strand_);
+  queryPromise->then(
+      [this, self = this->shared_from_this()](IUSBEndpoint::Pointer usbEndpoint) mutable {
+        this->uriQueryHandler(std::move(usbEndpoint));
+      },
+      [this, self = this->shared_from_this()](const error::Error& e) mutable {
+        promise_->reject(e);
+        promise_.reset();
+      });
+
+  this->startQuery(AccessoryModeQueryType::SEND_URI,
+                   std::move(usbEndpoint), std::move(queryPromise));
+}
+
+void AccessoryModeQueryChain::uriQueryHandler(
+    IUSBEndpoint::Pointer usbEndpoint) {
+  auto queryPromise = IAccessoryModeQuery::Promise::defer(strand_);
+  queryPromise->then(
+      [this, self = this->shared_from_this()](IUSBEndpoint::Pointer usbEndpoint) mutable {
+        this->serialQueryHandler(std::move(usbEndpoint));
+      },
+      [this, self = this->shared_from_this()](const error::Error& e) mutable {
+        promise_->reject(e);
+        promise_.reset();
+      });
+
+  this->startQuery(AccessoryModeQueryType::SEND_SERIAL,
+                   std::move(usbEndpoint), std::move(queryPromise));
+}
+
+void AccessoryModeQueryChain::serialQueryHandler(
+    IUSBEndpoint::Pointer usbEndpoint) {
+  auto queryPromise = IAccessoryModeQuery::Promise::defer(strand_);
+  queryPromise->then(
+      [this, self = this->shared_from_this()](IUSBEndpoint::Pointer usbEndpoint) mutable {
+        this->startQueryHandler(std::move(usbEndpoint));
+      },
+      [this, self = this->shared_from_this()](const error::Error& e) mutable {
+        promise_->reject(e);
+        promise_.reset();
+      });
+
+  this->startQuery(AccessoryModeQueryType::START,
+                   std::move(usbEndpoint), std::move(queryPromise));
+>>>>>>> Stashed changes
 }
 }

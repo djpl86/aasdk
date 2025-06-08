@@ -27,9 +27,17 @@ namespace channel
 namespace av
 {
 
+<<<<<<< Updated upstream
 MediaAudioServiceChannel::MediaAudioServiceChannel(boost::asio::io_service::strand& strand, messenger::IMessenger::Pointer messenger)
     : AudioServiceChannel(strand, std::move(messenger), messenger::ChannelId::MEDIA_AUDIO)
 {
+=======
+MediaAudioServiceChannel::MediaAudioServiceChannel(
+    boost::asio::io_context::strand& strand,
+    messenger::IMessenger::Pointer messenger)
+    : AudioServiceChannel(strand, std::move(messenger),
+                          messenger::ChannelId::MEDIA_AUDIO) {}
+>>>>>>> Stashed changes
 
 }
 

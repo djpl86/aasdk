@@ -6,7 +6,7 @@
 *  it under the terms of the GNU General Public License as published by
 *  the Free Software Foundation; either version 3 of the License, or
 *  (at your option) any later version.
-
+*
 *  aasdk is distributed in the hope that it will be useful,
 *  but WITHOUT ANY WARRANTY; without even the implied warranty of
 *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -31,6 +31,7 @@ ConnectedAccessoriesEnumerator::ConnectedAccessoriesEnumerator(IUSBWrapper& usbW
     , queryChainFactory_(queryChainFactory)
 {
 
+<<<<<<< Updated upstream
 }
 
 void ConnectedAccessoriesEnumerator::enumerate(Promise::Pointer promise)
@@ -123,6 +124,53 @@ DeviceHandle ConnectedAccessoriesEnumerator::getNextDeviceHandle()
     }
 
     return handle;
+=======
+ConnectedAccessoriesEnumerator::ConnectedAccessoriesEnumerator(
+    IUSBWrapper& usbWrapper, boost::asio::io_context& ioService,
+    IAccessoryModeQueryChainFactory& queryChainFactory)
+    : usbWrapper_(usbWrapper),
+      strand_(ioService),
+      queryChainFactory_(queryChainFactory) {}
+
+void ConnectedAccessoriesEnumerator::enumerate(Promise::Pointer promise) {
+  strand_.dispatch(
+      [this, self = this->shared_from_this(), promise = std::move(promise)]() mutable {
+        if (promise_ != nullptr) {
+          OPENAUTO_LOG(error) << "rejecting because operation in progress";
+          promise->reject(error::Error(error::ErrorCode::OPERATION_IN_PROGRESS));
+        } else {
+          promise_ = std::move(promise);
+
+          auto result = usbWrapper_.getDeviceList(deviceListHandle_);
+
+          OPENAUTO_LOG(error) << "usbWrapper_.getDeviceList result: " << result;
+
+          if (result < 0) {
+            promise_->reject(error::Error(error::ErrorCode::USB_LIST_DEVICES));
+          } else if (deviceListHandle_->empty()) {
+            OPENAUTO_LOG(error) << "deviceListHandle_->empty";
+            promise_->resolve(false);
+          } else {
+            OPENAUTO_LOG(error) << "do queryNextDevice";
+            actualDeviceIter_ = deviceListHandle_->begin();
+            this->queryNextDevice();
+          }
+        }
+      },
+      std::allocator<void>()  // allocator required by Boost.Asio
+  );
+}
+
+void ConnectedAccessoriesEnumerator::cancel() {
+  strand_.dispatch(
+      [this, self = this->shared_from_this()]() mutable {
+        if (queryChain_ != nullptr) {
+          queryChain_->cancel();
+        }
+      },
+      std::allocator<void>()  // allocator required by Boost.Asio
+  );
+>>>>>>> Stashed changes
 }
 
 void ConnectedAccessoriesEnumerator::reset()

@@ -23,12 +23,18 @@
 #include <f1x/aasdk/USB/AccessoryModeSendStringType.hpp>
 
 
+<<<<<<< Updated upstream
 namespace f1x
 {
 namespace aasdk
 {
 namespace usb
 {
+=======
+AccessoryModeQueryFactory::AccessoryModeQueryFactory(
+    usb::IUSBWrapper& usbWrapper, boost::asio::io_context& ioService)
+    : usbWrapper_(usbWrapper), ioService_(ioService) {}
+>>>>>>> Stashed changes
 
 AccessoryModeQueryFactory::AccessoryModeQueryFactory(usb::IUSBWrapper& usbWrapper, boost::asio::io_service& ioService)
     : usbWrapper_(usbWrapper)

@@ -26,6 +26,7 @@ namespace aasdk
 namespace usb
 {
 
+<<<<<<< Updated upstream
 AccessoryModeQueryChainFactory::AccessoryModeQueryChainFactory(IUSBWrapper& usbWrapper,
                                                                boost::asio::io_service& ioService,
                                                                IAccessoryModeQueryFactory& queryFactory)
@@ -33,6 +34,14 @@ AccessoryModeQueryChainFactory::AccessoryModeQueryChainFactory(IUSBWrapper& usbW
     , ioService_(ioService)
     , queryFactory_(queryFactory)
 {
+=======
+AccessoryModeQueryChainFactory::AccessoryModeQueryChainFactory(
+    IUSBWrapper& usbWrapper, boost::asio::io_context& ioService,
+    IAccessoryModeQueryFactory& queryFactory)
+    : usbWrapper_(usbWrapper),
+      ioService_(ioService),
+      queryFactory_(queryFactory) {}
+>>>>>>> Stashed changes
 
 }
 

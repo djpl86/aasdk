@@ -6,7 +6,7 @@
 *  it under the terms of the GNU General Public License as published by
 *  the Free Software Foundation; either version 3 of the License, or
 *  (at your option) any later version.
-
+*
 *  aasdk is distributed in the hope that it will be useful,
 *  but WITHOUT ANY WARRANTY; without even the implied warranty of
 *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -16,6 +16,13 @@
 *  along with aasdk. If not, see <http://www.gnu.org/licenses/>.
 */
 
+<<<<<<< Updated upstream
+=======
+#include <aasdk/USB/ConnectedAccessoriesEnumerator.hpp>
+#include <aasdk/USB/AccessoryModeQueryChain.hpp>
+#include <aasdk/USB/IUSBWrapper.hpp>
+#include <aasdk/USB/USBHub.hpp>
+>>>>>>> Stashed changes
 #include <thread>
 #include <f1x/aasdk/USB/IUSBWrapper.hpp>
 #include <f1x/aasdk/USB/USBHub.hpp>
@@ -29,6 +36,7 @@ namespace aasdk
 namespace usb
 {
 
+<<<<<<< Updated upstream
 USBHub::USBHub(IUSBWrapper& usbWrapper, boost::asio::io_service& ioService, IAccessoryModeQueryChainFactory& queryChainFactory)
     : usbWrapper_(usbWrapper)
     , strand_(ioService)
@@ -43,6 +51,21 @@ void USBHub::start(Promise::Pointer promise)
         {
             hotplugPromise_->reject(error::Error(error::ErrorCode::OPERATION_ABORTED));
             hotplugPromise_.reset();
+=======
+USBHub::USBHub(IUSBWrapper& usbWrapper, boost::asio::io_context& ioService,
+               IAccessoryModeQueryChainFactory& queryChainFactory)
+    : usbWrapper_(usbWrapper),
+      strand_(ioService),
+      queryChainFactory_(queryChainFactory) {}
+
+void USBHub::start(Promise::Pointer promise) {
+  strand_.dispatch(
+      [this, self = this->shared_from_this(), promise = std::move(promise)]() mutable {
+        if (hotplugPromise_ != nullptr) {
+          hotplugPromise_->reject(
+              error::Error(error::ErrorCode::OPERATION_ABORTED));
+          hotplugPromise_.reset();
+>>>>>>> Stashed changes
         }
 
         hotplugPromise_ = std::move(promise);
@@ -53,6 +76,7 @@ void USBHub::start(Promise::Pointer promise)
             hotplugHandle_ = usbWrapper_.hotplugRegisterCallback(LIBUSB_HOTPLUG_EVENT_DEVICE_ARRIVED, LIBUSB_HOTPLUG_NO_FLAGS, LIBUSB_HOTPLUG_MATCH_ANY, LIBUSB_HOTPLUG_MATCH_ANY,
                                                                  LIBUSB_HOTPLUG_MATCH_ANY, reinterpret_cast<libusb_hotplug_callback_fn>(&USBHub::hotplugEventsHandler), reinterpret_cast<void*>(this));
         }
+<<<<<<< Updated upstream
     });
 }
 
@@ -139,6 +163,47 @@ void USBHub::handleDevice(libusb_device* device)
     }
 }
 
+=======
+      },
+      std::allocator<void>()  // allocator required by Boost.Asio
+  );
+}
+
+void USBHub::cancel() {
+  strand_.dispatch(
+      [this, self = this->shared_from_this()]() mutable {
+        if (hotplugPromise_ != nullptr) {
+          hotplugPromise_->reject(
+              error::Error(error::ErrorCode::OPERATION_ABORTED));
+          hotplugPromise_.reset();
+        }
+
+        std::for_each(
+            queryChainQueue_.begin(), queryChainQueue_.end(),
+            std::bind(&IAccessoryModeQueryChain::cancel, std::placeholders::_1));
+
+        if (self_ != nullptr) {
+          hotplugHandle_.reset();
+          self_.reset();
+        }
+      },
+      std::allocator<void>()  // allocator required by Boost.Asio
+  );
+}
+
+int USBHub::hotplugEventsHandler(libusb_context* usbContext,
+                                 libusb_device* device,
+                                 libusb_hotplug_event event, void* userData) {
+  if (event == LIBUSB_HOTPLUG_EVENT_DEVICE_ARRIVED) {
+    auto self = reinterpret_cast<USBHub*>(userData)->shared_from_this();
+    self->strand_.dispatch(
+        std::bind(&USBHub::handleDevice, self, device),
+        std::allocator<void>()  // allocator required by Boost.Asio
+    );
+  }
+
+  return 0;
+>>>>>>> Stashed changes
 }
 }
 }

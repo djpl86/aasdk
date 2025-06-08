@@ -49,6 +49,7 @@ protected:
                           std::bind(&SendPromiseHandlerMock::onReject, &sendPromiseHandlerMock_, std::placeholders::_1));
     }
 
+<<<<<<< Updated upstream
     boost::asio::io_service ioService_;
     transport::ut::TransportMock transportMock_;
     transport::ITransport::Pointer transport_;
@@ -56,6 +57,15 @@ protected:
     ICryptor::Pointer cryptor_;
     SendPromiseHandlerMock sendPromiseHandlerMock_;
     SendPromise::Pointer sendPromise_;
+=======
+  boost::asio::io_context ioService_;
+  transport::ut::TransportMock transportMock_;
+  transport::ITransport::Pointer transport_;
+  CryptorMock cryptorMock_;
+  ICryptor::Pointer cryptor_;
+  SendPromiseHandlerMock sendPromiseHandlerMock_;
+  SendPromise::Pointer sendPromise_;
+>>>>>>> Stashed changes
 };
 
 ACTION(ThrowSSLWriteException)

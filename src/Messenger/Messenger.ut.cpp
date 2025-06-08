@@ -52,6 +52,7 @@ protected:
                           std::bind(&SendPromiseHandlerMock::onReject, &sendPromiseHandlerMock_, std::placeholders::_1));
     }
 
+<<<<<<< Updated upstream
     boost::asio::io_service ioService_;
     MessageInStreamMock messageInStreamMock_;
     IMessageInStream::Pointer messageInStream_;
@@ -61,6 +62,17 @@ protected:
     ReceivePromise::Pointer receivePromise_;
     SendPromiseHandlerMock sendPromiseHandlerMock_;
     SendPromise::Pointer sendPromise_;
+=======
+  boost::asio::io_context ioService_;
+  MessageInStreamMock messageInStreamMock_;
+  IMessageInStream::Pointer messageInStream_;
+  MessageOutStreamMock messageOutStreamMock_;
+  IMessageOutStream::Pointer messageOutStream_;
+  ReceivePromiseHandlerMock receivePromiseHandlerMock_;
+  ReceivePromise::Pointer receivePromise_;
+  SendPromiseHandlerMock sendPromiseHandlerMock_;
+  SendPromise::Pointer sendPromise_;
+>>>>>>> Stashed changes
 };
 
 BOOST_FIXTURE_TEST_CASE(Messenger_Receive, MessengerUnitTest)

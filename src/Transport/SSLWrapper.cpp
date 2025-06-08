@@ -38,6 +38,7 @@ SSLWrapper::SSLWrapper()
     OpenSSL_add_all_algorithms();
 }
 
+<<<<<<< Updated upstream
 SSLWrapper::~SSLWrapper()
 {
     FIPS_mode_set(0);
@@ -45,6 +46,16 @@ SSLWrapper::~SSLWrapper()
     CONF_modules_unload(1);
     EVP_cleanup();
     CRYPTO_cleanup_all_ex_data();
+=======
+SSLWrapper::~SSLWrapper() {
+//#if OPENSSL_VERSION_NUMBER < 0x30000000L
+//  FIPS_mode_set(0);
+//#endif
+  ENGINE_cleanup();
+  CONF_modules_unload(1);
+  EVP_cleanup();
+  CRYPTO_cleanup_all_ex_data();
+>>>>>>> Stashed changes
 #if (OPENSSL_VERSION_NUMBER < 0x10100000L)
     ERR_remove_state(0);
 #endif

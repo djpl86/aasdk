@@ -6,7 +6,7 @@
 *  it under the terms of the GNU General Public License as published by
 *  the Free Software Foundation; either version 3 of the License, or
 *  (at your option) any later version.
-
+*
 *  aasdk is distributed in the hope that it will be useful,
 *  but WITHOUT ANY WARRANTY; without even the implied warranty of
 *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -25,6 +25,7 @@ namespace aasdk
 namespace transport
 {
 
+<<<<<<< Updated upstream
 Transport::Transport(boost::asio::io_service& ioService)
     : receiveStrand_(ioService)
     , sendStrand_(ioService)
@@ -60,6 +61,26 @@ void Transport::receiveHandler(size_t bytesTransferred)
     {
         this->rejectReceivePromises(e);
     }
+=======
+Transport::Transport(boost::asio::io_context& ioService)
+    : receiveStrand_(ioService), sendStrand_(ioService) {}
+
+void Transport::receive(size_t size, ReceivePromise::Pointer promise) {
+  receiveStrand_.dispatch(
+      [this, self = this->shared_from_this(), size, promise = std::move(promise)]() mutable {
+        receiveQueue_.emplace_back(std::make_pair(size, std::move(promise)));
+
+        if (receiveQueue_.size() == 1) {
+          try {
+            this->distributeReceivedData();
+          } catch (const error::Error& e) {
+            this->rejectReceivePromises(e);
+          }
+        }
+      },
+      std::allocator<void>()  // allocator required by Boost.Asio
+  );
+>>>>>>> Stashed changes
 }
 
 void Transport::distributeReceivedData()
@@ -82,6 +103,7 @@ void Transport::distributeReceivedData()
     }
 }
 
+<<<<<<< Updated upstream
 void Transport::rejectReceivePromises(const error::Error& e)
 {
     for(auto& queueElement : receiveQueue_)
@@ -90,6 +112,29 @@ void Transport::rejectReceivePromises(const error::Error& e)
     }
 
     receiveQueue_.clear();
+=======
+void Transport::rejectReceivePromises(const error::Error& e) {
+  for (auto& queueElement : receiveQueue_) {
+    queueElement.second->reject(e);
+  }
+
+  receiveQueue_.clear();
+}
+
+void Transport::send(common::Data data, SendPromise::Pointer promise) {
+  sendStrand_.dispatch(
+      [this, self = this->shared_from_this(), data = std::move(data),
+       promise = std::move(promise)]() mutable {
+        sendQueue_.emplace_back(
+            std::make_pair(std::move(data), std::move(promise)));
+
+        if (sendQueue_.size() == 1) {
+          this->enqueueSend(sendQueue_.begin());
+        }
+      },
+      std::allocator<void>()  // allocator required by Boost.Asio
+  );
+>>>>>>> Stashed changes
 }
 
 void Transport::send(common::Data data, SendPromise::Pointer promise)

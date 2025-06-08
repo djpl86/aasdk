@@ -6,7 +6,7 @@
 *  it under the terms of the GNU General Public License as published by
 *  the Free Software Foundation; either version 3 of the License, or
 *  (at your option) any later version.
-
+*
 *  aasdk is distributed in the hope that it will be useful,
 *  but WITHOUT ANY WARRANTY; without even the implied warranty of
 *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -43,6 +43,7 @@ void TCPWrapper::close(boost::asio::ip::tcp::socket& socket)
     socket.close(ec);
 }
 
+<<<<<<< Updated upstream
 void TCPWrapper::asyncConnect(boost::asio::ip::tcp::socket& socket, const std::string& hostname, uint16_t port, ConnectHandler handler)
 {
     socket.async_connect(boost::asio::ip::tcp::endpoint(boost::asio::ip::address::from_string(hostname), port), std::move(handler));
@@ -54,6 +55,26 @@ boost::system::error_code TCPWrapper::connect(boost::asio::ip::tcp::socket& sock
     socket.set_option(boost::asio::ip::tcp::no_delay(true), ec);
     socket.connect(boost::asio::ip::tcp::endpoint(boost::asio::ip::address::from_string(hostname), port), ec);
     return ec;
+=======
+void TCPWrapper::asyncConnect(boost::asio::ip::tcp::socket& socket,
+                              const std::string& hostname, uint16_t port,
+                              ConnectHandler handler) {
+  socket.async_connect(
+      boost::asio::ip::tcp::endpoint(
+          boost::asio::ip::make_address(hostname), port),
+      std::move(handler));
+}
+
+boost::system::error_code TCPWrapper::connect(
+    boost::asio::ip::tcp::socket& socket, const std::string& hostname,
+    uint16_t port) {
+  boost::system::error_code ec;
+  socket.set_option(boost::asio::ip::tcp::no_delay(true), ec);
+  socket.connect(boost::asio::ip::tcp::endpoint(
+                     boost::asio::ip::make_address(hostname), port),
+                 ec);
+  return ec;
+>>>>>>> Stashed changes
 }
 
 }

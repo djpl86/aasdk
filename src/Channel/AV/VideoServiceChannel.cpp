@@ -32,9 +32,17 @@ namespace channel
 namespace av
 {
 
+<<<<<<< Updated upstream
 VideoServiceChannel::VideoServiceChannel(boost::asio::io_service::strand& strand, messenger::IMessenger::Pointer messenger)
     : ServiceChannel(strand, std::move(messenger), messenger::ChannelId::VIDEO)
 {
+=======
+VideoServiceChannel::VideoServiceChannel(
+    boost::asio::io_context::strand& strand,
+    messenger::IMessenger::Pointer messenger)
+    : ServiceChannel(strand, std::move(messenger),
+                     messenger::ChannelId::VIDEO) {}
+>>>>>>> Stashed changes
 
 }
 

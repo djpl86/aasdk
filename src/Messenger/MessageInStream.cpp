@@ -6,7 +6,7 @@
 *  it under the terms of the GNU General Public License as published by
 *  the Free Software Foundation; either version 3 of the License, or
 *  (at your option) any later version.
-
+*
 *  aasdk is distributed in the hope that it will be useful,
 *  but WITHOUT ANY WARRANTY; without even the implied warranty of
 *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -16,8 +16,14 @@
 *  along with aasdk. If not, see <http://www.gnu.org/licenses/>.
 */
 
+<<<<<<< Updated upstream
 #include <f1x/aasdk/Messenger/MessageInStream.hpp>
 #include <f1x/aasdk/Error/Error.hpp>
+=======
+#include <aasdk/Error/Error.hpp>
+#include <aasdk/Messenger/MessageInStream.hpp>
+#include <boost/asio.hpp>
+>>>>>>> Stashed changes
 
 namespace f1x
 {
@@ -26,12 +32,46 @@ namespace aasdk
 namespace messenger
 {
 
+<<<<<<< Updated upstream
 MessageInStream::MessageInStream(boost::asio::io_service& ioService, transport::ITransport::Pointer transport, ICryptor::Pointer cryptor)
     : strand_(ioService)
     , transport_(std::move(transport))
     , cryptor_(std::move(cryptor))
 {
 
+=======
+MessageInStream::MessageInStream(boost::asio::io_context& ioService,
+                                 transport::ITransport::Pointer transport,
+                                 ICryptor::Pointer cryptor)
+    : strand_(ioService),
+      transport_(std::move(transport)),
+      cryptor_(std::move(cryptor)) {}
+
+void MessageInStream::startReceive(ReceivePromise::Pointer promise) {
+  strand_.dispatch(
+      [this, self = this->shared_from_this(), promise = std::move(promise)]() mutable {
+        if (promise_ == nullptr) {
+          promise_ = std::move(promise);
+
+          auto transportPromise =
+              transport::ITransport::ReceivePromise::defer(strand_);
+          transportPromise->then(
+              [this, self = this->shared_from_this()](common::Data data) mutable {
+                this->receiveFrameHeaderHandler(common::DataConstBuffer(data));
+              },
+              [this, self = this->shared_from_this()](const error::Error& e) mutable {
+                promise_->reject(e);
+                promise_.reset();
+              });
+
+          transport_->receive(FrameHeader::getSizeOf(), std::move(transportPromise));
+        } else {
+          promise->reject(error::Error(error::ErrorCode::OPERATION_IN_PROGRESS));
+        }
+      },
+      std::allocator<void>()  // allocator required by Boost.Asio
+  );
+>>>>>>> Stashed changes
 }
 
 void MessageInStream::startReceive(ReceivePromise::Pointer promise)

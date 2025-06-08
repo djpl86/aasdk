@@ -51,6 +51,7 @@ protected:
                        std::bind(&ConnectedAccessoriesEnumeratorPromiseHandlerMock::onReject, &promiseHandlerMock_, std::placeholders::_1));
     }
 
+<<<<<<< Updated upstream
     boost::asio::io_service ioService_;
     USBWrapperMock usbWrapperMock_;
     AccessoryModeQueryChainFactoryMock queryChainFactoryMock_;
@@ -63,6 +64,20 @@ protected:
     DeviceHandle deviceHandle_;
     ConnectedAccessoriesEnumeratorPromiseHandlerMock promiseHandlerMock_;
     IConnectedAccessoriesEnumerator::Promise::Pointer promise_;
+=======
+  boost::asio::io_context ioService_;
+  USBWrapperMock usbWrapperMock_;
+  AccessoryModeQueryChainFactoryMock queryChainFactoryMock_;
+  AccessoryModeQueryChainMock queryChainMock_;
+  IAccessoryModeQueryChain::Pointer queryChain_;
+  DeviceList deviceList_;
+  DeviceListHandle deviceListHandle_;
+  libusb_device* device_;
+  USBWrapperMock::DummyDeviceHandle dummyDeviceHandle_;
+  DeviceHandle deviceHandle_;
+  ConnectedAccessoriesEnumeratorPromiseHandlerMock promiseHandlerMock_;
+  IConnectedAccessoriesEnumerator::Promise::Pointer promise_;
+>>>>>>> Stashed changes
 };
 
 BOOST_FIXTURE_TEST_CASE(ConnectedAccessoriesEnumerator_FirstDeviceIsAOAPCapables, ConnectedAccessoriesEnumeratorUnitTest)

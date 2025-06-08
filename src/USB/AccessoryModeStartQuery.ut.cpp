@@ -47,12 +47,21 @@ protected:
                       std::bind(&AccessoryModeQueryPromiseHandlerMock::onReject, &promiseHandlerMock_, std::placeholders::_1));
     }
 
+<<<<<<< Updated upstream
     boost::asio::io_service ioService_;
     USBWrapperMock usbWrapperMock_;
     std::shared_ptr<USBEndpointMock> usbEndpointMock_;
     IUSBEndpoint::Pointer usbEndpoint_;
     AccessoryModeQueryPromiseHandlerMock promiseHandlerMock_;
     IAccessoryModeQuery::Promise::Pointer promise_;
+=======
+  boost::asio::io_context ioService_;
+  USBWrapperMock usbWrapperMock_;
+  std::shared_ptr<USBEndpointMock> usbEndpointMock_;
+  IUSBEndpoint::Pointer usbEndpoint_;
+  AccessoryModeQueryPromiseHandlerMock promiseHandlerMock_;
+  IAccessoryModeQuery::Promise::Pointer promise_;
+>>>>>>> Stashed changes
 
     static constexpr uint32_t USB_TYPE_VENDOR = 0x40;
     static constexpr uint32_t ACC_REQ_START = 53;

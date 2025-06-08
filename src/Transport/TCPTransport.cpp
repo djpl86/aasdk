@@ -25,10 +25,16 @@ namespace aasdk
 namespace transport
 {
 
+<<<<<<< Updated upstream
 TCPTransport::TCPTransport(boost::asio::io_service& ioService, tcp::ITCPEndpoint::Pointer tcpEndpoint)
     : Transport(ioService)
     , tcpEndpoint_(std::move(tcpEndpoint))
 {
+=======
+TCPTransport::TCPTransport(boost::asio::io_context& ioService,
+                           tcp::ITCPEndpoint::Pointer tcpEndpoint)
+    : Transport(ioService), tcpEndpoint_(std::move(tcpEndpoint)) {}
+>>>>>>> Stashed changes
 
 }
 

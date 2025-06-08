@@ -52,6 +52,7 @@ protected:
                       std::bind(&USBHubPromiseHandlerMock::onReject, &promiseHandlerMock_, std::placeholders::_1));
     }
 
+<<<<<<< Updated upstream
     boost::asio::io_service ioService_;
     USBWrapperMock usbWrapperMock_;
     AccessoryModeQueryChainFactoryMock queryChainFactoryMock_;
@@ -65,6 +66,21 @@ protected:
     libusb_hotplug_callback_handle rawHotplugCallbacHandle_;
     HotplugCallbackHandle hotplugCallbackHandle_;
     libusb_hotplug_callback_fn hotplugCallback_;
+=======
+  boost::asio::io_context ioService_;
+  USBWrapperMock usbWrapperMock_;
+  AccessoryModeQueryChainFactoryMock queryChainFactoryMock_;
+  AccessoryModeQueryChainMock queryChainMock_;
+  IAccessoryModeQueryChain::Pointer queryChain_;
+  libusb_device* device_;
+  USBWrapperMock::DummyDeviceHandle dummyDeviceHandle_;
+  DeviceHandle deviceHandle_;
+  USBHubPromiseHandlerMock promiseHandlerMock_;
+  IUSBHub::Promise::Pointer promise_;
+  libusb_hotplug_callback_handle rawHotplugCallbacHandle_;
+  HotplugCallbackHandle hotplugCallbackHandle_;
+  libusb_hotplug_callback_fn hotplugCallback_;
+>>>>>>> Stashed changes
 
     static constexpr uint16_t cGoogleVendorId = 0x18D1;
     static constexpr uint16_t cAOAPId = 0x2D00;

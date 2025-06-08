@@ -49,6 +49,7 @@ protected:
                       std::bind(&AccessoryModeQueryChainPromiseHandlerMock::onReject, &promiseHandlerMock_, std::placeholders::_1));
     }
 
+<<<<<<< Updated upstream
     boost::asio::io_service ioService_;
     USBWrapperMock usbWrapperMock_;
     AccessoryModeQueryFactoryMock queryFactoryMock_;
@@ -57,6 +58,16 @@ protected:
     std::shared_ptr<AccessoryModeQueryMock> queryMock_;
     AccessoryModeQueryChainPromiseHandlerMock promiseHandlerMock_;
     IAccessoryModeQueryChain::Promise::Pointer promise_;
+=======
+  boost::asio::io_context ioService_;
+  USBWrapperMock usbWrapperMock_;
+  AccessoryModeQueryFactoryMock queryFactoryMock_;
+  USBWrapperMock::DummyDeviceHandle dummyDeviceHandle_;
+  DeviceHandle deviceHandle_;
+  std::shared_ptr<AccessoryModeQueryMock> queryMock_;
+  AccessoryModeQueryChainPromiseHandlerMock promiseHandlerMock_;
+  IAccessoryModeQueryChain::Promise::Pointer promise_;
+>>>>>>> Stashed changes
 };
 
 BOOST_FIXTURE_TEST_CASE(AccessoryModeQueryChain_QueryAOAPDevice, AccessoryModeQueryChainUnitTest)

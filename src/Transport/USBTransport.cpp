@@ -25,10 +25,16 @@ namespace aasdk
 namespace transport
 {
 
+<<<<<<< Updated upstream
 USBTransport::USBTransport(boost::asio::io_service& ioService, usb::IAOAPDevice::Pointer aoapDevice)
     : Transport(ioService)
     , aoapDevice_(std::move(aoapDevice))
 {}
+=======
+USBTransport::USBTransport(boost::asio::io_context& ioService,
+                           usb::IAOAPDevice::Pointer aoapDevice)
+    : Transport(ioService), aoapDevice_(std::move(aoapDevice)) {}
+>>>>>>> Stashed changes
 
 void USBTransport::enqueueReceive(common::DataBuffer buffer)
 {

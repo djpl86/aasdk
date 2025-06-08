@@ -29,11 +29,18 @@ namespace aasdk
 namespace error
 {
 
+<<<<<<< Updated upstream:include/f1x/aasdk/Error/Error.hpp
 class Error: public std::exception
 {
 public:
     Error();
     Error(ErrorCode code, uint32_t nativeCode = 0);
+=======
+class TCPTransport : public Transport {
+ public:
+  TCPTransport(boost::asio::io_context& ioService,
+               tcp::ITCPEndpoint::Pointer tcpEndpoint);
+>>>>>>> Stashed changes:include/aasdk/Transport/TCPTransport.hpp
 
     ErrorCode getCode() const;
     uint32_t getNativeCode() const;

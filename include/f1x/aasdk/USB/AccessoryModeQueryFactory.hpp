@@ -27,6 +27,7 @@ namespace aasdk
 namespace usb
 {
 
+<<<<<<< Updated upstream:include/f1x/aasdk/USB/AccessoryModeQueryFactory.hpp
 
 class AccessoryModeQueryFactory: public IAccessoryModeQueryFactory
 {
@@ -37,6 +38,19 @@ public:
 private:
     usb::IUSBWrapper& usbWrapper_;
     boost::asio::io_service& ioService_;
+=======
+class AccessoryModeQueryFactory : public IAccessoryModeQueryFactory {
+ public:
+  AccessoryModeQueryFactory(usb::IUSBWrapper& usbWrapper,
+                            boost::asio::io_context& ioService);
+  IAccessoryModeQuery::Pointer createQuery(
+      AccessoryModeQueryType queryType,
+      IUSBEndpoint::Pointer usbEndpoint) override;
+
+ private:
+  usb::IUSBWrapper& usbWrapper_;
+  boost::asio::io_context& ioService_;
+>>>>>>> Stashed changes:include/aasdk/USB/AccessoryModeQueryFactory.hpp
 };
 
 }

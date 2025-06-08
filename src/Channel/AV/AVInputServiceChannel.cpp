@@ -32,9 +32,17 @@ namespace channel
 namespace av
 {
 
+<<<<<<< Updated upstream
 AVInputServiceChannel::AVInputServiceChannel(boost::asio::io_service::strand& strand, messenger::IMessenger::Pointer messenger)
     : ServiceChannel(strand, std::move(messenger), messenger::ChannelId::AV_INPUT)
 {
+=======
+AVInputServiceChannel::AVInputServiceChannel(
+    boost::asio::io_context::strand& strand,
+    messenger::IMessenger::Pointer messenger)
+    : ServiceChannel(strand, std::move(messenger),
+                     messenger::ChannelId::AV_INPUT) {}
+>>>>>>> Stashed changes
 
 }
 

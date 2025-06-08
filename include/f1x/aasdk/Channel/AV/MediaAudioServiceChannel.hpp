@@ -29,10 +29,17 @@ namespace channel
 namespace av
 {
 
+<<<<<<< Updated upstream:include/f1x/aasdk/Channel/AV/MediaAudioServiceChannel.hpp
 class MediaAudioServiceChannel: public AudioServiceChannel
 {
 public:
     MediaAudioServiceChannel(boost::asio::io_service::strand& strand, messenger::IMessenger::Pointer messenger);
+=======
+class MediaAudioServiceChannel : public AudioServiceChannel {
+ public:
+  MediaAudioServiceChannel(boost::asio::io_context::strand& strand,
+                           messenger::IMessenger::Pointer messenger);
+>>>>>>> Stashed changes:include/aasdk/Channel/AV/MediaAudioServiceChannel.hpp
 };
 
 }

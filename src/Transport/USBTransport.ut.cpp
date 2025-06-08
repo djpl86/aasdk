@@ -55,6 +55,7 @@ protected:
                           std::bind(&TransportSendPromiseHandlerMock::onReject, &sendPromiseHandlerMock_, std::placeholders::_1));
     }
 
+<<<<<<< Updated upstream
     boost::asio::io_service ioService_;
     usb::ut::USBEndpointMock inEndpointMock_;
     usb::ut::USBEndpointMock outEndpointMock_;
@@ -64,6 +65,17 @@ protected:
     ITransport::SendPromise::Pointer sendPromise_;
     usb::ut::AOAPDeviceMock aoapDeviceMock_;
     usb::IAOAPDevice::Pointer aoapDevice_;
+=======
+  boost::asio::io_context ioService_;
+  usb::ut::USBEndpointMock inEndpointMock_;
+  usb::ut::USBEndpointMock outEndpointMock_;
+  TransportReceivePromiseHandlerMock receivePromiseHandlerMock_;
+  ITransport::ReceivePromise::Pointer receivePromise_;
+  TransportSendPromiseHandlerMock sendPromiseHandlerMock_;
+  ITransport::SendPromise::Pointer sendPromise_;
+  usb::ut::AOAPDeviceMock aoapDeviceMock_;
+  usb::IAOAPDevice::Pointer aoapDevice_;
+>>>>>>> Stashed changes
 };
 
 BOOST_FIXTURE_TEST_CASE(USBTransport_ReceiveAtOnce, USBTransportUnitTest)

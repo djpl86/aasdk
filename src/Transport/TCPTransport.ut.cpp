@@ -51,6 +51,7 @@ protected:
                            std::bind(&TransportSendPromiseHandlerMock::onReject, &sendPromiseHandlerMock_, std::placeholders::_1));
     }
 
+<<<<<<< Updated upstream
     boost::asio::io_service ioService_;
     tcp::ut::TCPEndpointMock tcpEndpointMock_;
     TransportReceivePromiseHandlerMock receivePromiseHandlerMock_;
@@ -58,6 +59,15 @@ protected:
     TransportSendPromiseHandlerMock sendPromiseHandlerMock_;
     ITransport::SendPromise::Pointer sendPromise_;
     tcp::ITCPEndpoint::Pointer tcpEndpoint_;
+=======
+  boost::asio::io_context ioService_;
+  tcp::ut::TCPEndpointMock tcpEndpointMock_;
+  TransportReceivePromiseHandlerMock receivePromiseHandlerMock_;
+  ITransport::ReceivePromise::Pointer receivePromise_;
+  TransportSendPromiseHandlerMock sendPromiseHandlerMock_;
+  ITransport::SendPromise::Pointer sendPromise_;
+  tcp::ITCPEndpoint::Pointer tcpEndpoint_;
+>>>>>>> Stashed changes
 };
 
 BOOST_FIXTURE_TEST_CASE(TCPTransport_ReceiveAtOnce, TCPTransportUnitTest)

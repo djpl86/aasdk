@@ -26,10 +26,16 @@ namespace aasdk
 namespace usb
 {
 
+<<<<<<< Updated upstream
 AccessoryModeQuery::AccessoryModeQuery(boost::asio::io_service& ioService, IUSBEndpoint::Pointer usbEndpoint)
     : strand_(ioService)
     , usbEndpoint_(std::move(usbEndpoint))
 {
+=======
+AccessoryModeQuery::AccessoryModeQuery(boost::asio::io_context& ioService,
+                                       IUSBEndpoint::Pointer usbEndpoint)
+    : strand_(ioService), usbEndpoint_(std::move(usbEndpoint)) {}
+>>>>>>> Stashed changes
 
 }
 

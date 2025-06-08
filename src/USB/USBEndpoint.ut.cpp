@@ -47,12 +47,21 @@ protected:
                       std::bind(&USBEndpointPromiseHandlerMock::onReject, &promiseHandlerMock_, std::placeholders::_1));
     }
 
+<<<<<<< Updated upstream
     USBWrapperMock usbWrapperMock_;
     boost::asio::io_service ioService_;
     USBWrapperMock::DummyDeviceHandle dummyDeviceHandle_;
     DeviceHandle deviceHandle_;
     USBEndpointPromiseHandlerMock promiseHandlerMock_;
     IUSBEndpoint::Promise::Pointer promise_;
+=======
+  USBWrapperMock usbWrapperMock_;
+  boost::asio::io_context ioService_;
+  USBWrapperMock::DummyDeviceHandle dummyDeviceHandle_;
+  DeviceHandle deviceHandle_;
+  USBEndpointPromiseHandlerMock promiseHandlerMock_;
+  IUSBEndpoint::Promise::Pointer promise_;
+>>>>>>> Stashed changes
 };
 
 BOOST_FIXTURE_TEST_CASE(USBEndpoint_ControlTransferForNonControlEndpoint, USBEndpointUnitTest)
